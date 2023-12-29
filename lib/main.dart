@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:need_resume/need_resume.dart';
 
+import 'features/task/di/task_module.dart';
 import 'features/task/ui.dart';
+import 'features/task/ui/category_list_screen.dart';
+import 'mvvm/observer.dart';
 
 void main() {
+  setupTaskLocator();
   runApp(
-      MyApp()
+      //MyApp()
+    MyApp2()
       // MyCheckboxExample(
       //   title: 'tit1',
       //   subtitle: 'ede',
@@ -28,7 +34,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrangeAccent),
         useMaterial3: true,
       ),
       home:  TaskWidget(),
@@ -142,3 +148,100 @@ class _MyCheckboxExampleState extends State<MyCheckboxExample> {
   }
 }
 
+//test
+class MyApp2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        title: 'My Application',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrangeAccent),
+          useMaterial3: true,
+        ),
+        home: CategoryListScreen()
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  @override
+  HomeScreenState createState() => HomeScreenState();
+}
+
+class HomeScreenState extends ResumableState<HomeScreen> implements EventObserver{
+  
+  @override
+  void onReady() {
+    // Implement your code inside here
+
+    print('HomeScreen is ready!');
+  }
+
+  @override
+  void onResume() {
+    // Implement your code inside here
+
+    print('HomeScreen is resumed!');
+  }
+
+  @override
+  void onPause() {
+    // Implement your code inside here
+
+    print('HomeScreen is paused!');
+  }
+
+  void goAnotherScreen() {
+    // Replace Navigator.push() or Navigator.pushNamed() with push() or pushNamed()
+
+    push(context, MaterialPageRoute(builder: (context) => AnotherScreen()));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Go to Another Screen'),
+          onPressed: () {
+            goAnotherScreen();
+          },
+        ),
+      ),
+    );
+  }
+
+  @override
+  void emit(ViewEvent event) {
+    // TODO: implement emit
+  }
+}
+
+class AnotherScreen extends StatefulWidget {
+  @override
+  AnotherScreenState createState() => AnotherScreenState();
+}
+
+class AnotherScreenState extends ResumableState<AnotherScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+          title: Text('aaa')
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Go Back'),
+          onPressed: () {
+            goBack();
+          },
+        ),
+      ),
+    );
+  }
+
+  void goBack() {
+    Navigator.pop(context);
+  }
+}
+//

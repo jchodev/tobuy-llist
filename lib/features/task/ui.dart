@@ -1,12 +1,14 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
+import 'package:to_buy_list/features/task/di/task_module.dart';
+import 'package:to_buy_list/features/task/viewmodel/category_task_viewmodel.dart';
+import 'package:to_buy_list/features/task/widget/detail_page.dart';
 
 import '../../mvvm/observer.dart';
 import 'model.dart';
 import 'repository.dart';
-import 'ui/new_category_view.dart';
-import 'viewmodel.dart';
+import 'widget//item_category_view.dart';
+import 'package:need_resume/need_resume.dart';
+
 
 class TaskWidget extends StatefulWidget {
   const TaskWidget({super.key});
@@ -17,16 +19,40 @@ class TaskWidget extends StatefulWidget {
   }
 }
 
-class _TaskWidgetState extends State<TaskWidget> implements EventObserver {
-  final TaskViewModel _viewModel = TaskViewModel(TaskRepositoryImpl());
+class _TaskWidgetState extends ResumableState<TaskWidget> implements EventObserver {
+
+  final CategoryTaskViewModel _viewModel = CategoryTaskViewModel();
+
   bool _isLoading = false;
-  List<CategoryTask> _tasks = [];
+  List<CategoryTask> _categories = [];
 
   @override
   void initState() {
     super.initState();
     _viewModel.subscribe(this);
   }
+
+  @override
+  void onReady() {
+    // Implement your code inside here
+
+    print('TaskWidget is ready!');
+  }
+
+  @override
+  void onResume() {
+    // Implement your code inside here
+
+    print('TaskWidget is resumed!');
+  }
+
+  @override
+  void onPause() {
+    // Implement your code inside here
+
+    print('TaskWidget is paused!');
+  }
+
 
   @override
   void deactivate() {
@@ -40,19 +66,13 @@ class _TaskWidgetState extends State<TaskWidget> implements EventObserver {
         appBar: AppBar(
           title: const Text("TO-Buy-List"),
         ),
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     _viewModel.loadTasks();
-        //   },
-        //   child: const Icon(Icons.refresh),
-        // ),
         floatingActionButton: Column (
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             //1
             FloatingActionButton(
                 onPressed: () {
-                  _viewModel.loadTasks();
+                  _viewModel.loadCategoryTasks();
                 },
                 child: const Icon(Icons.refresh),
             ),
@@ -72,20 +92,16 @@ class _TaskWidgetState extends State<TaskWidget> implements EventObserver {
           child: CircularProgressIndicator(),
         )
             : ListView.builder(
-          itemCount: _tasks.length,
+          itemCount: _categories.length,
           itemBuilder: (context, index) {
 
             return ItemCategory(
-                categoryTask: _tasks[index],
-                onClicked:(bool value) {
-                  print("Button clicked with value: $value");
+                categoryTask: _categories[index],
+                onClicked:(CategoryTask value) {
+                  // 跳轉到另一個畫面，使用自定義動畫
+                  gotoDetailPage(true, value);
+                  print("Button clicked with value: ${value.category.name}");
                 },
-            );
-
-
-            return ListTile(
-              title: Text(_tasks[index].category.name),
-              subtitle: Text(_tasks[index].tasks.length.toString()),
             );
           },
         )
@@ -101,9 +117,9 @@ class _TaskWidgetState extends State<TaskWidget> implements EventObserver {
           _isLoading = (event as LoadingEvent).isLoading;
         });
         break;
-      case TasksLoadedEvent:
+      case CategoryTasksLoadedEvent:
         setState(() {
-          _tasks = (event as TasksLoadedEvent).tasks;
+          _categories = (event as CategoryTasksLoadedEvent).tasks;
         });
         break;
       case DismissBottomViewEvent:
@@ -144,7 +160,7 @@ class _TaskWidgetState extends State<TaskWidget> implements EventObserver {
                           child: Text("NEW LIST",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 40.0
+                                fontSize: 36.0
                             ),
                           )
                       ),
@@ -174,7 +190,6 @@ class _TaskWidgetState extends State<TaskWidget> implements EventObserver {
                             )
                           ),
                           onPressed: (){
-                            _viewModel.loadTasks();
                             _viewModel.createCategory(_textFieldController.text);
                           },
                           child: const Text(
@@ -187,6 +202,46 @@ class _TaskWidgetState extends State<TaskWidget> implements EventObserver {
             )
         );
       },
+    );
+  }
+
+  void gotoDetailPage(bool enterFromBottom, CategoryTask categoryTask){
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => DetailPage(categoryTask : categoryTask)));
+  }
+
+  void gotoDetailPage2(bool enterFromBottom, CategoryTask categoryTask){
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 500),
+        pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return DetailPage(categoryTask : categoryTask);
+        },
+        transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child) {
+          if (enterFromBottom) {
+            return SlideTransition(
+              position: animation.drive(
+                Tween(begin: Offset(0.0, 1.0), end: Offset.zero),
+              ),
+              child: child,
+            );
+          }
+          else {
+            return Align(
+              child: FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }

@@ -2,9 +2,10 @@ class Task {
   int id;
   String description;
   int categoryId;
+  int qty;
   bool done;
 
-  Task(this.id, this.description, this.categoryId, this.done);
+  Task(this.id, this.description, this.categoryId, this.qty, this.done);
 }
 
 class Category {
