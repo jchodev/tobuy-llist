@@ -4,6 +4,7 @@ class Task {
   int categoryId;
   int qty;
   bool done;
+  int sortedIndex = 999;
 
   Task(this.id, this.description, this.categoryId, this.qty, this.done);
 }
@@ -11,6 +12,7 @@ class Task {
 class Category {
   int id;
   String name;
+  int sortedIndex = 999;
   Category(this.id, this.name);
 }
 

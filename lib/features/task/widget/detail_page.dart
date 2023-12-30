@@ -69,26 +69,7 @@ class _DetailPageState extends State<DetailPage> implements EventObserver {
       ),
       body: _isLoading ?
             const Center(child: CircularProgressIndicator())
-      :   ListView.builder(
-            itemCount: _tasks.length,
-            itemBuilder: (context, index) {
-              return ItemTask(
-                task: _tasks[index],
-                onClicked:(Task task) {
-                  showBottomSheet(
-                      task,
-                      (Task task) {
-                        _viewModel.updateTask(task, true);
-                      }
-                  );
-                },
-                onCheckboxClicked: (bool value) {
-                  _tasks[index].done = value;
-                  _viewModel.updateTask(_tasks[index], false);
-                },
-              );
-            }
-          )
+      :  listView()
       );
 
   }
@@ -114,6 +95,45 @@ class _DetailPageState extends State<DetailPage> implements EventObserver {
       // Handle unknown event type if needed
         break;
     }
+  }
+
+  Widget listView() {
+    return ReorderableListView(
+        onReorder: (oldIndex, newIndex) {
+          // Handle item reordering logic here
+          if (oldIndex < newIndex) {
+            for (int i = oldIndex; i < newIndex; i++) {
+              _tasks[i].sortedIndex--;
+            }
+          } else {
+            for (int i = newIndex; i < oldIndex; i++) {
+              _tasks[i].sortedIndex++;
+            }
+          }
+          _tasks.forEach((element) {
+            print(element.description);
+          });
+          // Update tasks in database
+          //updateTasksInDatabase(tasks);
+        },
+        children: _tasks.map((item) {
+          return ItemTask(
+            key: Key('${item.id}'),
+            task: item,
+            onClicked:(Task task) {
+              showBottomSheet(
+                  task, (Task task) {
+                _viewModel.updateTask(task, true);
+              }
+              );
+            },
+            onCheckboxClicked: (bool value) {
+              item.done = value;
+              _viewModel.updateTask(item, false);
+            },
+          );
+        }).toList()
+    );
   }
 
   void showBottomSheet(Task task, OnSaveClicked onSaveClicked ){

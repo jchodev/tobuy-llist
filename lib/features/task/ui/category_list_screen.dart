@@ -88,21 +88,7 @@ class CategoryListScreenState extends ResumableState<CategoryListScreen> impleme
       body: _isLoading
           ? const Center(
         child: CircularProgressIndicator(),
-      )
-          : ListView.builder(
-        itemCount: _categories.length,
-        itemBuilder: (context, index) {
-
-          return ItemCategory(
-            categoryTask: _categories[index],
-            onClicked:(CategoryTask value) {
-              // 跳轉到另一個畫面，使用自定義動畫
-              gotoDetailPage(true, value);
-              print("Button clicked with value: ${value.category.name}");
-            },
-          );
-        },
-      )
+      ) : listView()
     );
   }
 
@@ -206,4 +192,38 @@ class CategoryListScreenState extends ResumableState<CategoryListScreen> impleme
     push(context, MaterialPageRoute(builder: (context) => DetailPage(categoryTask : categoryTask)));
   }
 
+  Widget listView1() {
+    return ReorderableListView(
+      onReorder: (oldIndex, newIndex) {
+        // Handle item reordering logic here
+      },
+      children: _categories.map((category) {
+        return ItemCategory(
+          key: Key('${category.category.id}'),
+          categoryTask: category,
+          onClicked:(CategoryTask value) {
+            // 跳轉到另一個畫面，使用自定義動畫
+            gotoDetailPage(true, value);
+            print("Button clicked with value: ${value.category.name}");
+          },
+        );
+      }).toList()
+    );
+  }
+
+  Widget listView() {
+    return ListView.builder(
+      itemCount: _categories.length,
+      itemBuilder: (context, index) {
+        return ItemCategory(
+          categoryTask: _categories[index],
+          onClicked:(CategoryTask value) {
+            // 跳轉到另一個畫面，使用自定義動畫
+            gotoDetailPage(true, value);
+            print("Button clicked with value: ${value.category.name}");
+          },
+        );
+      },
+    );
+  }
 }

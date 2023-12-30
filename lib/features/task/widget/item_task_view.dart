@@ -32,46 +32,45 @@ class _ItemTaskState extends State<ItemTask> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-        child: Center(
-            child: GestureDetector(
-                onTap: () {
-                  widget.onClicked(_task);
-                },
-                child: Card(
-                  elevation: 8.0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.0)
-                  ),
-                  child: Padding (
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          _task.description,
-                          style: const TextStyle(fontSize: 20, color: Colors.black),
-                        ),
-                        const Spacer(),
-                        Text(
-                          "x ${_task.qty}",
-                          style: const TextStyle(fontSize: 16, color: Colors.black),
-                        ),
-                        const SizedBox(height: 16),
-                        Checkbox(value: _isChecked, onChanged: (newValue) {
-                          setState(() {
-                            _isChecked = newValue!;
-                          });
-                          _task.done = _isChecked;
-                          widget.onCheckboxClicked(_isChecked);
-                        })
-                      ],
+    return Card(
+      elevation: 8.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      child: InkWell (
+        onTap: () {
+          widget.onClicked(_task);
+        },
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 16.0),
+          child:  Center(
+              child: GestureDetector(
+                child: Row(
+                  children: [
+                    Text(
+                      _task.description,
+                      style: const TextStyle(fontSize: 20, color: Colors.black),
                     ),
-                  ),
-                )
-            )
+                    const Spacer(),
+                    Text(
+                      "x ${_task.qty}",
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                    const SizedBox(width: 16),
+                    Checkbox(value: _isChecked, onChanged: (newValue) {
+                      setState(() {
+                        _isChecked = newValue!;
+                      });
+                      _task.done = _isChecked;
+                      widget.onCheckboxClicked(_isChecked);
+                    }),
+                    const SizedBox(width: 16),
+                  ],
+                ),
+              )
+          ),
         ),
+      )
     );
-
   }
 }
