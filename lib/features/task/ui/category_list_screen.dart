@@ -203,8 +203,7 @@ class CategoryListScreenState extends ResumableState<CategoryListScreen> impleme
   }
 
   void gotoDetailPage(bool enterFromBottom, CategoryTask categoryTask){
-    //push(context, MaterialPageRoute(builder: (context) => DetailPage(categoryTask : categoryTask)));
-    push()
+    push(context, MaterialPageRoute(builder: (context) => DetailPage(categoryTask : categoryTask)));
   }
 
 }
