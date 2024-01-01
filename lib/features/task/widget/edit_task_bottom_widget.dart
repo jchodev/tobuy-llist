@@ -91,6 +91,7 @@ class _EditTaskBottomWidgetState extends State<EditTaskBottomWidget>{
                           IconButton(
                             onPressed: () {
                               setState(() {
+                                _task.description = _descTextFieldController.text;
                                 _task.qty = _task.qty > 0 ? _task.qty - 1 : 0;
                               });
                             },
@@ -100,6 +101,7 @@ class _EditTaskBottomWidgetState extends State<EditTaskBottomWidget>{
                           IconButton(
                             onPressed: () {
                               setState(() {
+                                _task.description = _descTextFieldController.text;
                                 _task.qty = _task.qty + 1;
                               });
                             },
