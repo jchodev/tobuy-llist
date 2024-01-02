@@ -1,9 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:need_resume/need_resume.dart';
 import 'package:to_buy_list/firebase_options.dart';
 
 import 'di/app_module.dart';
+import 'features/login_reg/di/loginreg_module.dart';
+import 'features/login_reg/view/screen/login_screen.dart';
 import 'features/task/di/task_module.dart';
 import 'features/task/ui.dart';
 //import 'features/task/ui/category_list_screen.dart';
@@ -15,8 +18,11 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  setupAppModule();
-  setupTaskLocator();
+
+  final getIt = GetIt.instance;
+  setupAppModule(getIt);
+  setupLoginRegModule(getIt);
+  setupTaskLocator(getIt);
   runApp(
       //MyApp()
     MyApp2()
@@ -167,7 +173,7 @@ class MyApp2 extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrangeAccent),
           useMaterial3: true,
         ),
-        home: FirestoreCategoryListScreen()
+        home: LoginScreen()
     );
   }
 }

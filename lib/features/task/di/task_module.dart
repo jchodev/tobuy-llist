@@ -3,9 +3,8 @@ import 'package:to_buy_list/features/firebase_task/repository/category_repositor
 
 import '../repository.dart';
 
-final getIt = GetIt.instance;
 
-void setupTaskLocator() {
+void setupTaskLocator(GetIt getIt) {
   getIt.registerSingleton<TaskRepository>(TaskRepositoryImpl());
   getIt.registerSingleton<CategoryRepository>(CategoryRepositoryImpl());
 
