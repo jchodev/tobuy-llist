@@ -18,3 +18,6 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Setup Flutter version
 ![image](https://github.com/jchodev/tobuy-llist/assets/100594737/ab898979-cbb9-417b-b87e-23426c3aa1de)
+
+## Setup nodes.js and fire in windows
+https://www.youtube.com/watch?v=ybgOIwf4dZU
