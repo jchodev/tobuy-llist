@@ -1,12 +1,21 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:need_resume/need_resume.dart';
+import 'package:to_buy_list/firebase_options.dart';
 
+import 'di/app_module.dart';
 import 'features/task/di/task_module.dart';
 import 'features/task/ui.dart';
-import 'features/task/ui/category_list_screen.dart';
+//import 'features/task/ui/category_list_screen.dart';
+import 'features/firebase_task/view/screen/category_list_screen.dart';
 import 'mvvm/observer.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  setupAppModule();
   setupTaskLocator();
   runApp(
       //MyApp()
@@ -158,7 +167,7 @@ class MyApp2 extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrangeAccent),
           useMaterial3: true,
         ),
-        home: CategoryListScreen()
+        home: FirestoreCategoryListScreen()
     );
   }
 }
